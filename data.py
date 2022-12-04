@@ -86,20 +86,121 @@ df_NY.drop('CMPLNT_FR_TM', axis=1, inplace=True)
 
 df_NY = df_NY[df_NY['CMPLNT_FR_DT'] >= 2015]
 
-chunk = pd.read_csv('LA Crime_Cleared.csv',chunksize=10000000)
+
+#This is NY put into the same format as the LA dataframe 
+df_NY = df_NY[['CMPLNT_FR_DT', 'RPT_DT', 'OFNS_DESC', 'VIC_AGE_GROUP', 'VIC_SEX', 'VIC_RACE']].copy()
+
+
 #LA's Dataframe section
 chunk = pd.read_csv('LA Crime_Cleared.csv', chunksize=10000000)
 df_LA = pd.concat(chunk)
-print(df_LA.head(5))
 
-df2 = df_LA[['Date Rptd', 'DATE OCC', 'Crm Cd Desc', 'Vict Age', 'Vict Sex', 'Vict Descent']].copy()
-print(df2.head(5))
+df2 = df_LA[['DATE OCC', 'Date Rptd', 'Crm Cd Desc', 'Vict Age', 'Vict Sex', 'Vict Descent']].copy()
+df2.rename(columns={'DATE OCC': 'DATE_OCC'}, inplace = True)
+df2.rename(columns={'Date Rptd': 'Date_Rptd'}, inplace = True)
+                   
+df2['DATE_OCC'] = df2['DATE_OCC'].str.replace('-','')
+df2['DATE_OCC'] = df2['DATE_OCC'].str.replace(':','')
+df2['DATE_OCC'] = df2['DATE_OCC'].str.replace(' ','')
+df2['DATE_OCC'] = df2.DATE_OCC.str.slice(0, -10, 1)
+df2['DATE_OCC'] = df2['DATE_OCC'].astype(str).astype(int)
 
-chunk = pd.read_csv('Crimes_-_2001_to_present.csv',chunksize=10000000)
+df2['Date_Rptd'] = df2['Date_Rptd'].str.replace('-','')
+df2['Date_Rptd'] = df2['Date_Rptd'].str.replace(':','')
+df2['Date_Rptd'] = df2['Date_Rptd'].str.replace(' ','')
+df2['Date_Rptd'] = df2.Date_Rptd.str.slice(4, -8, 1)
+df2['Date_Rptd'] = df2['Date_Rptd'].astype(str).astype(int)
+
+df2 = df2[df2['DATE_OCC'] >= 2015]
+
+
 #Chicago's DataFrame section
 chunk = pd.read_csv('Crimes_-_2001_to_present.csv', chunksize=10000000)
-df_Chi = pd.concat(chunk)
-print(df_Chi.head(5))
+df_CHI = pd.concat(chunk)
 
-df3 = df_Chi[['Year', 'Date', 'Primary Type', 'Description', 'Updated On']].copy()
-print(df3.head(5))
+df3 = df_CHI[['Year', 'Date', 'Primary Type', 'Description', 'Updated On']].copy()
+df3['Year'] = df3['Year'].astype(str).astype(int)
+
+df3['Date'] = df3['Date'].str.replace('/','')
+df3['Date'] = df3['Date'].str.replace(':','')
+df3['Date'] = df3['Date'].str.replace(' ','')
+df3['Date'] = df3.Date.str.slice(0, -14, 1)
+df3['Date'] = df3['Date'].astype(str).astype(int)
+
+df3 = df3[df3['Year'] >= 2015]
+
+
+df_NY.to_csv('NY UPDATED.csv', encoding='utf-8', index=False)
+df2.to_csv('LA UPDATED.csv', encoding='utf-8', index=False)
+df3.to_csv('CHICAGO UPDATED.csv', encoding='utf-8', index=False)
+
+
+#From this point, read csv from the three files saved and make three new dataframes
+
+chunk = pd.read_csv('NY UPDATED.csv',chunksize = 10000000)
+df_NY = pd.concat(chunk)
+
+chunk = pd.read_csv('LA UPDATED.csv',chunksize = 10000000)
+df_LA = pd.concat(chunk)
+
+chunk = pd.read_csv('CHICAGO UPDATED.csv',chunksize = 10000000)
+df_CHI = pd.concat(chunk)
+
+
+#rename NY
+df_NY.rename(columns={'CMPLNT_FR_DT': 'YEAR'}, inplace = True)
+df_NY.rename(columns={'RPT_DT': 'MONTH'}, inplace = True)
+df_NY.rename(columns={'OFNS_DESC': 'CRIME_DESCRIPTION'}, inplace = True)
+#Get rid of harrassment 2
+df_NY['CRIME_DESCRIPTION'] = df_NY['CRIME_DESCRIPTION'].str.replace('HARRASSMENT 2','HARRASSMENT')
+
+
+#rename LA
+df_LA.rename(columns={'DATE_OCC': 'YEAR'}, inplace = True)
+df_LA.rename(columns={'Date_Rptd': 'MONTH'}, inplace = True)
+df_LA.rename(columns={'Crm Cd Desc': 'CRIME_DESCRIPTION'}, inplace = True)
+
+#rename CHICAGO
+df_CHI.rename(columns={'Year': 'YEAR'}, inplace = True)
+df_CHI.rename(columns={'Date': 'MONTH'}, inplace = True)
+df_CHI.rename(columns={'Description': 'CRIME_DESCRIPTION'}, inplace = True)
+#drop Updated On
+df_CHI.drop('Updated On', axis=1, inplace=True)
+#for CHICAGO, choose primary type or crime description as main crime descriptor 
+
+#Trim each down OPTIONAL
+df_NY = df_NY[['YEAR', 'MONTH', 'CRIME_DESCRIPTION']].copy()
+df_LA = df_LA[['YEAR', 'MONTH', 'CRIME_DESCRIPTION']].copy()
+df_CHI = df_CHI[['YEAR', 'MONTH', 'CRIME_DESCRIPTION']].copy()
+
+
+
+#WE NEED TO PICK A SUBSET OF CRIMES THAT HAVE THE MOST OCCURENCES (PICK A NUMBER TO FOCUS ON (maybe 10))
+#WRITE CODE TO PUT A NUMBER ON EACH CRIME IN THE LIST
+#DO THIS FOR ALL THREE CITIES AND PICK THE TOP CRIMES
+#ALSO STANDARDIZE THEIR NAMES (FROM THE TOP CRIMES COMBINE ANY THAT ARE CLOSELY RELATED) 
+
+#Counts of NY crimes
+#df_NY['CRIME_DESCRIPTION'].value_counts().head(50)
+
+#Counts of LA crimes
+#df_LA['CRIME_DESCRIPTION'].value_counts().head(50)
+
+#Counts of CHICAGO crimes
+#df_CHI['CRIME_DESCRIPTION'].value_counts().head(50)
+
+
+#EXAMPLE (WE WOULD RENAME THE CRIMES SO THEY'RE STANDARDIZED FIRST!)
+#crimes = ['ASSAULT', 'RAPE']
+#PETIT LARCENY IS THE TOP NYC CRIME, HARRASSMENT IS THE SECOND
+#crimes = ['PETIT LARCENY', 'HARRASSMENT']
+
+# selecting rows based on condition
+#df_NY = df_NY.loc[df_NY['CRIME_DESCRIPTION'].isin(crimes)]
+
+#One slide where we go over general facts
+#top crimes (top crime in each city)
+
+#df_NY.head(51)
+#df_LA.head(51)
+#df_CHI.head(51)
