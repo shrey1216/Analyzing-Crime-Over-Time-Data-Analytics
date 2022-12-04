@@ -85,3 +85,21 @@ df_NY.drop('CMPLNT_FR_TM', axis=1, inplace=True)
 
 
 df_NY = df_NY[df_NY['CMPLNT_FR_DT'] >= 2015]
+
+chunk = pd.read_csv('LA Crime_Cleared.csv',chunksize=10000000)
+#LA's Dataframe section
+chunk = pd.read_csv('LA Crime_Cleared.csv', chunksize=10000000)
+df_LA = pd.concat(chunk)
+print(df_LA.head(5))
+
+df2 = df_LA[['Date Rptd', 'DATE OCC', 'Crm Cd Desc', 'Vict Age', 'Vict Sex', 'Vict Descent']].copy()
+print(df2.head(5))
+
+chunk = pd.read_csv('Crimes_-_2001_to_present.csv',chunksize=10000000)
+#Chicago's DataFrame section
+chunk = pd.read_csv('Crimes_-_2001_to_present.csv', chunksize=10000000)
+df_Chi = pd.concat(chunk)
+print(df_Chi.head(5))
+
+df3 = df_Chi[['Year', 'Date', 'Primary Type', 'Description', 'Updated On']].copy()
+print(df3.head(5))
