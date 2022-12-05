@@ -317,6 +317,8 @@ df_CHI['CRIME_DESCRIPTION'] = df_CHI['CRIME_DESCRIPTION'].str.replace("FIRST DEG
 #petit larceny is 1000 in NY, categories for under 500 and over 500 should be combined THEFT PLAIN IN LA 950 UNDER
  
 
+df_CHI = df_CHI[['YEAR', 'MONTH','CRIME_DESCRIPTION']].copy()
+  
 
 #EIGHT
 #PETIT LARCENY DONE DON'T TOUCH
