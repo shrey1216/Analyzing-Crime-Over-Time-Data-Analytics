@@ -1,0 +1,163 @@
+import pandas as pd
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from scipy import stats
+
+
+chunk = pd.read_csv('NY DATAFRAME FINAL.csv',chunksize = 10000000)
+df_NY = pd.concat(chunk)
+
+chunk = pd.read_csv('LA DATAFRAME FINAL.csv',chunksize = 10000000)
+df_LA = pd.concat(chunk)
+
+chunk = pd.read_csv('CHICAGO DATAFRAME FINAL.csv',chunksize = 10000000)
+df_CHI = pd.concat(chunk)
+
+
+#Test whether the datasets are statistically different 
+#Perform a linear regression:
+#More precisely, linear regression is used to determine the character and strength 
+#of the association between a dependent variable and a series of other independent 
+#variables
+#Do victims have an effect as a dependent variable?
+#Normal graph to show trends over time
+
+
+contingency_NY = pd.crosstab(df_NY['CRIME_DESCRIPTION'], df_NY['YEAR'])
+contingency_LA = pd.crosstab(df_LA['CRIME_DESCRIPTION'], df_LA['YEAR'])
+contingency_CHI = pd.crosstab(df_CHI['CRIME_DESCRIPTION'], df_CHI['YEAR'])
+print(contingency_CHI)
+# contingency_CHI.info()
+
+#CHI Linear regression
+
+##CHANGE contigency_NY to contigency_LA
+arson = contingency_CHI.iloc[0, :].values.reshape((-1,1))  
+battery = contingency_CHI.iloc[1, :].values.reshape((-1,1)) 
+burglary = contingency_CHI.iloc[2, :].values.reshape((-1,1))  
+dangerousWeapons= contingency_CHI.iloc[3, :].values.reshape((-1,1)) 
+homicide = contingency_CHI.iloc[4, :].values.reshape((-1,1))  
+narcotics = contingency_CHI.iloc[5, :].values.reshape((-1,1)) 
+petitLarceny = contingency_CHI.iloc[6, :].values.reshape((-1,1))
+robbery = contingency_CHI.iloc[7, :].values.reshape((-1,1))  
+sexualAssault = contingency_CHI.iloc[8, :].values.reshape((-1,1)) 
+Year = np.array([1,2,3,4,5]).reshape((-1,1))
+
+##NY to LA
+CHImodel1 = LinearRegression().fit(Year, arson)
+CHImodel2 = LinearRegression().fit(Year, battery)
+CHImodel3 = LinearRegression().fit(Year, burglary)
+CHImodel4 = LinearRegression().fit(Year, dangerousWeapons)
+CHImodel5 = LinearRegression().fit(Year, homicide)
+CHImodel6 = LinearRegression().fit(Year, narcotics)
+CHImodel7 = LinearRegression().fit(Year, petitLarceny)
+CHImodel8 = LinearRegression().fit(Year, robbery)
+CHImodel9 = LinearRegression().fit(Year, sexualAssault)
+
+
+print(plt.plot(Year, arson))
+print(plt.plot(Year, battery))
+print(plt.plot(Year, burglary))
+print(plt.plot(Year, dangerousWeapons))
+print(plt.plot(Year, homicide))
+print(plt.plot(Year, narcotics))
+print(plt.plot(Year, petitLarceny))
+print(plt.plot(Year, robbery))
+print(plt.plot(Year, sexualAssault))
+
+# df['ones'] = 1
+# A = df[['arson','ones']]
+# m,c = np.linalg.lstsq()
+# y_line = c + m*arson
+# print()
+# print(plt.plot(Year, battery))
+# print()
+# print(plt.plot(Year, burglary))
+# print()
+# print(plt.plotr(Year, dangerousWeapons))
+# print()
+# print(plt.plotr(Year, homicide))
+# print()
+# print(plt.plot(Year, narcotics))
+# print()
+# print(plt.plot(Year, petitLarceny))
+# print()
+# print(plt.plot(Year, robbery))
+# print()
+# print(plt.plot(Year, sexualAssault))
+# print()
+
+r_sq = CHImodel1.score(Year, arson)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel1.intercept_}")
+print(f"The slope is : {CHImodel1.coef_}")
+y_pred1 = CHImodel1.predict(Year)
+print(f"The predicted responses are: \n{y_pred1}")
+print()
+
+r_sq = CHImodel2.score(Year, battery)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel2.intercept_}")
+print(f"The slope is : {CHImodel2.coef_}")
+y_pred2 = CHImodel2.predict(Year)
+print(f"The predicted responses are: \n{y_pred2}")
+print()
+
+r_sq = CHImodel3.score(Year, burglary)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel3.intercept_}")
+print(f"The slope is : {CHImodel3.coef_}")
+y_pred3 = CHImodel3.predict(Year)
+print(f"The predicted responses are: \n{y_pred3}")
+print()
+
+r_sq = CHImodel4.score(Year, dangerousWeapons)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel4.intercept_}")
+print(f"The slope is : {CHImodel4.coef_}")
+y_pred4 = CHImodel4.predict(Year)
+print(f"The predicted responses are: \n{y_pred4}")
+print()
+
+r_sq = CHImodel5.score(Year, homicide)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel5.intercept_}")
+print(f"The slope is : {CHImodel5.coef_}")
+y_pred5 = CHImodel5.predict(Year)
+print(f"The predicted responses are: \n{y_pred5}")
+print()
+
+r_sq = CHImodel6.score(Year, narcotics)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel6.intercept_}")
+print(f"The slope is : {CHImodel6.coef_}")
+y_pred6 = CHImodel6.predict(Year)
+print(f"The predicted responses are: \n{y_pred6}")
+print()
+
+r_sq = CHImodel7.score(Year, petitLarceny)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel7.intercept_}")
+print(f"The slope is : {CHImodel7.coef_}")
+y_pred7 = CHImodel7.predict(Year)
+print(f"The predicted responses are: \n{y_pred7}")
+print()
+
+r_sq = CHImodel8.score(Year, robbery)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel8.intercept_}")
+print(f"The slope is : {CHImodel8.coef_}")
+y_pred8 = CHImodel8.predict(Year)
+print(f"The predicted responses are: \n{y_pred8}")
+print()
+
+r_sq = CHImodel9.score(Year, sexualAssault)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {CHImodel9.intercept_}")
+print(f"The slope is : {CHImodel9.coef_}")
+y_pred9 = CHImodel9.predict(Year)
+print(f"The predicted responses are: \n{y_pred9}")
+print()
