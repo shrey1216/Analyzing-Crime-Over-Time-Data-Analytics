@@ -40,7 +40,7 @@ homicide = contingency_NY.iloc[4, :].values.reshape((-1,1))
 narcotics = contingency_NY.iloc[5, :].values.reshape((-1,1)) 
 petitLarceny = contingency_NY.iloc[6, :].values.reshape((-1,1))
 robbery = contingency_NY.iloc[7, :].values.reshape((-1,1))  
-sexualAssault = contingency_NY.iloc[4, :].values.reshape((-1,1)) 
+sexualAssault = contingency_NY.iloc[8, :].values.reshape((-1,1)) 
 Year = np.array([1,2,3,4,5]).reshape((-1,1))
 
 ##NY to LA
