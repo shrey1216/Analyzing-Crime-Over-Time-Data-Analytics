@@ -1,0 +1,161 @@
+import pandas as pd
+import numpy as np
+from sklearn import datasets, linear_model
+from sklearn.metrics import mean_squared_error
+from sklearn.linear_model import LinearRegression
+import matplotlib.pyplot as plt
+from scipy import stats
+
+
+chunk = pd.read_csv('NY DATAFRAME FINAL.csv',chunksize = 10000000)
+df_NY = pd.concat(chunk)
+
+chunk = pd.read_csv('LA DATAFRAME FINAL.csv',chunksize = 10000000)
+df_LA = pd.concat(chunk)
+
+chunk = pd.read_csv('CHICAGO DATAFRAME FINAL.csv',chunksize = 10000000)
+df_CHI = pd.concat(chunk)
+
+
+#Test whether the datasets are statistically different 
+#Perform a linear regression:
+#More precisely, linear regression is used to determine the character and strength 
+#of the association between a dependent variable and a series of other independent 
+#variables
+
+contingency_NY = pd.crosstab(df_NY['CRIME_DESCRIPTION'], df_NY['YEAR'])
+contingency_LA = pd.crosstab(df_LA['CRIME_DESCRIPTION'], df_LA['YEAR'])
+contingency_CHI = pd.crosstab(df_CHI['CRIME_DESCRIPTION'], df_CHI['YEAR'])
+print(contingency_LA)
+# contingency_LA.info()
+
+#LA Linear regression
+
+##CHANGE contigency_NY to contigency_LA
+arson = contingency_LA.iloc[0, :].values.reshape((-1,1))  
+battery = contingency_LA.iloc[1, :].values.reshape((-1,1)) 
+burglary = contingency_LA.iloc[2, :].values.reshape((-1,1))  
+dangerousWeapons= contingency_LA.iloc[3, :].values.reshape((-1,1)) 
+homicide = contingency_LA.iloc[4, :].values.reshape((-1,1))  
+narcotics = contingency_LA.iloc[5, :].values.reshape((-1,1)) 
+petitLarceny = contingency_LA.iloc[6, :].values.reshape((-1,1))
+robbery = contingency_LA.iloc[7, :].values.reshape((-1,1))  
+sexualAssault = contingency_LA.iloc[8, :].values.reshape((-1,1)) 
+Year = np.array([1,2,3,4,5]).reshape((-1,1))
+
+##NY to LA
+LAmodel1 = LinearRegression().fit(Year, arson)
+LAmodel2 = LinearRegression().fit(Year, battery)
+LAmodel3 = LinearRegression().fit(Year, burglary)
+LAmodel4 = LinearRegression().fit(Year, dangerousWeapons)
+LAmodel5 = LinearRegression().fit(Year, homicide)
+LAmodel6 = LinearRegression().fit(Year, narcotics)
+LAmodel7 = LinearRegression().fit(Year, petitLarceny)
+LAmodel8 = LinearRegression().fit(Year, robbery)
+LAmodel9 = LinearRegression().fit(Year, sexualAssault)
+
+
+print(plt.plot(Year, arson))
+print(plt.plot(Year, battery))
+print(plt.plot(Year, burglary))
+print(plt.plot(Year, dangerousWeapons))
+print(plt.plot(Year, homicide))
+print(plt.plot(Year, narcotics))
+print(plt.plot(Year, petitLarceny))
+print(plt.plot(Year, robbery))
+print(plt.plot(Year, sexualAssault))
+
+# df['ones'] = 1
+# A = df[['arson','ones']]
+# m,c = np.linalg.lstsq()
+# y_line = c + m*arson
+# print()
+# print(plt.plot(Year, battery))
+# print()
+# print(plt.plot(Year, burglary))
+# print()
+# print(plt.plotr(Year, dangerousWeapons))
+# print()
+# print(plt.plotr(Year, homicide))
+# print()
+# print(plt.plot(Year, narcotics))
+# print()
+# print(plt.plot(Year, petitLarceny))
+# print()
+# print(plt.plot(Year, robbery))
+# print()
+# print(plt.plot(Year, sexualAssault))
+# print()
+
+##NY to LA for each paragraph below
+r_sq = LAmodel1.score(Year, arson)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel1.intercept_}")
+print(f"The slope is : {LAmodel1.coef_}")
+y_pred1 = LAmodel1.predict(Year)
+print(f"The predicted responses are: \n{y_pred1}")
+print()
+
+r_sq = LAmodel2.score(Year, battery)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel2.intercept_}")
+print(f"The slope is : {LAmodel2.coef_}")
+y_pred2 = LAmodel2.predict(Year)
+print(f"The predicted responses are: \n{y_pred2}")
+print()
+
+r_sq = LAmodel3.score(Year, burglary)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel3.intercept_}")
+print(f"The slope is : {LAmodel3.coef_}")
+y_pred3 = LAmodel3.predict(Year)
+print(f"The predicted responses are: \n{y_pred3}")
+print()
+
+r_sq = LAmodel4.score(Year, dangerousWeapons)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel4.intercept_}")
+print(f"The slope is : {LAmodel4.coef_}")
+y_pred4 = LAmodel4.predict(Year)
+print(f"The predicted responses are: \n{y_pred4}")
+print()
+
+r_sq = LAmodel5.score(Year, homicide)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel5.intercept_}")
+print(f"The slope is : {LAmodel5.coef_}")
+y_pred5 = LAmodel5.predict(Year)
+print(f"The predicted responses are: \n{y_pred5}")
+print()
+
+r_sq = LAmodel6.score(Year, narcotics)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel6.intercept_}")
+print(f"The slope is : {LAmodel6.coef_}")
+y_pred6 = LAmodel6.predict(Year)
+print(f"The predicted responses are: \n{y_pred6}")
+print()
+
+r_sq = LAmodel7.score(Year, petitLarceny)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel7.intercept_}")
+print(f"The slope is : {LAmodel7.coef_}")
+y_pred7 = LAmodel7.predict(Year)
+print(f"The predicted responses are: \n{y_pred7}")
+print()
+
+r_sq = LAmodel8.score(Year, robbery)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel8.intercept_}")
+print(f"The slope is : {LAmodel8.coef_}")
+y_pred8 = LAmodel8.predict(Year)
+print(f"The predicted responses are: \n{y_pred8}")
+print()
+
+r_sq = LAmodel9.score(Year, sexualAssault)
+print(f"The coefficient of determination is: {r_sq}")
+print(f"The intercept is: {LAmodel9.intercept_}")
+print(f"The slope is : {LAmodel9.coef_}")
+y_pred9 = LAmodel9.predict(Year)
+print(f"The predicted responses are: \n{y_pred9}")
+print()
