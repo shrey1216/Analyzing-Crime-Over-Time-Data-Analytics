@@ -28,18 +28,18 @@ df_LA['MONTH'] = df_LA.MONTH.astype(str)
 df_CHI['MONTH'] = df_CHI.MONTH.astype(str)
 
 
-#Rename the months to the seasons they correspond to 
+#rename the months to the season they correspond to
 df_NY.loc[df_NY['MONTH'].str.contains('9'), 'MONTH'] = 'FALL'
 df_NY.loc[df_NY['MONTH'].str.contains('10'), 'MONTH'] = 'FALL'
 df_NY.loc[df_NY['MONTH'].str.contains('11'), 'MONTH'] = 'FALL'
 
-df_NY.loc[df_NY['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
-df_NY.loc[df_NY['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
-df_NY.loc[df_NY['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
-
 df_NY.loc[df_NY['MONTH'].str.contains('3'), 'MONTH'] = 'SPRING'
 df_NY.loc[df_NY['MONTH'].str.contains('4'), 'MONTH'] = 'SPRING'
 df_NY.loc[df_NY['MONTH'].str.contains('5'), 'MONTH'] = 'SPRING'
+
+df_NY.loc[df_NY['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
+df_NY.loc[df_NY['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
+df_NY.loc[df_NY['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
 
 df_NY.loc[df_NY['MONTH'].str.contains('12'), 'MONTH'] = 'WINTER'
 df_NY.loc[df_NY['MONTH'].str.contains('1'), 'MONTH'] = 'WINTER'
@@ -51,13 +51,13 @@ df_LA.loc[df_LA['MONTH'].str.contains('9'), 'MONTH'] = 'FALL'
 df_LA.loc[df_LA['MONTH'].str.contains('10'), 'MONTH'] = 'FALL'
 df_LA.loc[df_LA['MONTH'].str.contains('11'), 'MONTH'] = 'FALL'
 
-df_LA.loc[df_LA['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
-df_LA.loc[df_LA['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
-df_LA.loc[df_LA['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
-
 df_LA.loc[df_LA['MONTH'].str.contains('3'), 'MONTH'] = 'SPRING'
 df_LA.loc[df_LA['MONTH'].str.contains('4'), 'MONTH'] = 'SPRING'
 df_LA.loc[df_LA['MONTH'].str.contains('5'), 'MONTH'] = 'SPRING'
+
+df_LA.loc[df_LA['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
+df_LA.loc[df_LA['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
+df_LA.loc[df_LA['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
 
 df_LA.loc[df_LA['MONTH'].str.contains('12'), 'MONTH'] = 'WINTER'
 df_LA.loc[df_LA['MONTH'].str.contains('1'), 'MONTH'] = 'WINTER'
@@ -69,18 +69,17 @@ df_CHI.loc[df_CHI['MONTH'].str.contains('9'), 'MONTH'] = 'FALL'
 df_CHI.loc[df_CHI['MONTH'].str.contains('10'), 'MONTH'] = 'FALL'
 df_CHI.loc[df_CHI['MONTH'].str.contains('11'), 'MONTH'] = 'FALL'
 
-df_CHI.loc[df_CHI['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
-df_CHI.loc[df_CHI['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
-df_CHI.loc[df_CHI['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
-
 df_CHI.loc[df_CHI['MONTH'].str.contains('3'), 'MONTH'] = 'SPRING'
 df_CHI.loc[df_CHI['MONTH'].str.contains('4'), 'MONTH'] = 'SPRING'
 df_CHI.loc[df_CHI['MONTH'].str.contains('5'), 'MONTH'] = 'SPRING'
 
+df_CHI.loc[df_CHI['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
+df_CHI.loc[df_CHI['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
+df_CHI.loc[df_CHI['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
+
 df_CHI.loc[df_CHI['MONTH'].str.contains('12'), 'MONTH'] = 'WINTER'
 df_CHI.loc[df_CHI['MONTH'].str.contains('1'), 'MONTH'] = 'WINTER'
 df_CHI.loc[df_CHI['MONTH'].str.contains('2'), 'MONTH'] = 'WINTER'
-
 
 #Rename the columns from MONTH to SEASON
 df_NY.rename(columns={'MONTH': 'SEASON'}, inplace = True)
