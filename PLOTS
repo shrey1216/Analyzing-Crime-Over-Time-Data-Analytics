@@ -1,0 +1,73 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import seaborn as sns
+
+
+chunk = pd.read_csv('NY DATAFRAME FINAL.csv',chunksize = 10000000)
+df_NY = pd.concat(chunk)
+
+chunk = pd.read_csv('LA DATAFRAME FINAL.csv',chunksize = 10000000)
+df_LA = pd.concat(chunk)
+
+chunk = pd.read_csv('CHICAGO DATAFRAME FINAL.csv',chunksize = 10000000)
+df_CHI = pd.concat(chunk)
+
+
+#print(df_NY['CRIME_DESCRIPTION'].value_counts().head(60))
+
+#df_NY_COUNTS = df_NY.value_counts().rename_axis('CRIME_DESCRIPTION').reset_index(name = 'COUNTS')
+#df_NY['CRIME_DESCRIPTION'].value_counts()
+#df_LA['CRIME_DESCRIPTION'].value_counts()
+#df_CHI['CRIME_DESCRIPTION'].value_counts()
+
+
+
+data_NY = {'COUNTS': [423910, 102455, 96891, 72777, 64287, 43872, 40062, 3965, 1636]}
+data_LA = {'COUNTS': [76085, 101733, 38, 43848, 156160, 65312, 13391, 1947, 1371]}
+data_CHI = {'COUNTS': [180515, 123907, 71372, 48277, 58293, 28475, 12202, 730, 2852]}
+
+df_NY_COUNTS = pd.DataFrame(data_NY, index=['PETIT LARCENY', 'BATTERY', 'NARCOTICS', 'ROBBERY', 'BURGLARY', 'DANGEROUS WEAPONS', 'SEXUAL ASSAULT', 'ARSON', 'HOMICIDE'])
+df_LA_COUNTS = pd.DataFrame(data_LA, index=['PETIT LARCENY', 'BATTERY', 'NARCOTICS', 'ROBBERY', 'BURGLARY', 'DANGEROUS WEAPONS', 'SEXUAL ASSAULT', 'ARSON', 'HOMICIDE'])
+df_CHI_COUNTS = pd.DataFrame(data_CHI, index=['PETIT LARCENY', 'BATTERY', 'NARCOTICS', 'ROBBERY', 'BURGLARY', 'DANGEROUS WEAPONS', 'SEXUAL ASSAULT', 'ARSON', 'HOMICIDE'])
+
+
+data = {'CRIME_DESCRIPTION': ['PETIT LARCENY', 'BATTERY', 'NARCOTICS', 'ROBBERY', 'BURGLARY', 'DANGEROUS WEAPONS', 'SEXUAL ASSAULT', 'ARSON', 'HOMICIDE'],
+                'COUNTS': [180515, 123907, 71372, 48277, 58293, 28475, 12202, 730, 2852]
+               }
+
+df_CHI_COUNTS = pd.DataFrame(data)
+
+#df_CHI_COUNTS.plot.pie(y = 'COUNTS', figsize = (25, 25), autopct='%1.1f%%', startangle = 90)
+#df_NY_COUNTS.plot(x ='index', y = 'unemployment_rate', kind='line')
+#df_CHI['CRIME_DESCRIPTION'].value_counts()
+
+#df_CHI_COUNTS.plot(x = 'CRIME_DESCRIPTION', y = 'COUNTS', kind = 'bar')
+
+#df_NY['MONTH'].value_counts()
+
+
+data_regress = {'MONTH': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                'CRIMES': [68334, 59492, 66090, 68077, 73953, 72726, 77024, 79082, 73662, 74323, 67901, 69191]
+               }
+df_REGRESS = pd.DataFrame(data_regress)
+mod = smf.ols(formula = 'CRIMES ~ MONTH', data = df_REGRESS)
+
+res = mod.fit()
+
+print(res.summary())
+print(res.params)
+
+
+x = np.array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12])
+y = np.array([68334, 59492, 66090, 68077, 73953, 72726, 77024, 79082, 73662, 74323, 67901, 69191])
+
+
+#create basic scatterplot
+plt.plot(x, y, 'o')
+
+#add linear regression line to scatterplot 
+plt.plot(x, 665.555944 * x + 66495.136364)
+sns.regplot(x, y)
