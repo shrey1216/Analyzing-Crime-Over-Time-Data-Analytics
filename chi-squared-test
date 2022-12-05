@@ -1,0 +1,124 @@
+import pandas as pd
+import numpy as np
+from scipy.stats import chi2_contingency
+
+
+chunk = pd.read_csv('NY DATAFRAME FINAL.csv',chunksize = 10000000)
+df_NY = pd.concat(chunk)
+
+chunk = pd.read_csv('LA DATAFRAME FINAL.csv',chunksize = 10000000)
+df_LA = pd.concat(chunk)
+
+chunk = pd.read_csv('CHICAGO DATAFRAME FINAL.csv',chunksize = 10000000)
+df_CHI = pd.concat(chunk)
+
+
+#Test whether the datasets are statistically different 
+#Perform a linear regression:
+#More precisely, linear regression is used to determine the character and strength 
+#of the association between a dependent variable and a series of other independent 
+#variables
+#Do victims have an effect as a dependent variable?
+#Normal graph to show trends over time
+
+
+#Convert each month type to string 
+df_NY['MONTH'] = df_NY.MONTH.astype(str)
+df_LA['MONTH'] = df_LA.MONTH.astype(str)
+df_CHI['MONTH'] = df_CHI.MONTH.astype(str)
+
+
+#Rename the months to the seasons they correspond to 
+df_NY.loc[df_NY['MONTH'].str.contains('9'), 'MONTH'] = 'FALL'
+df_NY.loc[df_NY['MONTH'].str.contains('10'), 'MONTH'] = 'FALL'
+df_NY.loc[df_NY['MONTH'].str.contains('11'), 'MONTH'] = 'FALL'
+
+df_NY.loc[df_NY['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
+df_NY.loc[df_NY['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
+df_NY.loc[df_NY['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
+
+df_NY.loc[df_NY['MONTH'].str.contains('3'), 'MONTH'] = 'SPRING'
+df_NY.loc[df_NY['MONTH'].str.contains('4'), 'MONTH'] = 'SPRING'
+df_NY.loc[df_NY['MONTH'].str.contains('5'), 'MONTH'] = 'SPRING'
+
+df_NY.loc[df_NY['MONTH'].str.contains('12'), 'MONTH'] = 'WINTER'
+df_NY.loc[df_NY['MONTH'].str.contains('1'), 'MONTH'] = 'WINTER'
+df_NY.loc[df_NY['MONTH'].str.contains('2'), 'MONTH'] = 'WINTER'
+
+
+
+df_LA.loc[df_LA['MONTH'].str.contains('9'), 'MONTH'] = 'FALL'
+df_LA.loc[df_LA['MONTH'].str.contains('10'), 'MONTH'] = 'FALL'
+df_LA.loc[df_LA['MONTH'].str.contains('11'), 'MONTH'] = 'FALL'
+
+df_LA.loc[df_LA['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
+df_LA.loc[df_LA['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
+df_LA.loc[df_LA['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
+
+df_LA.loc[df_LA['MONTH'].str.contains('3'), 'MONTH'] = 'SPRING'
+df_LA.loc[df_LA['MONTH'].str.contains('4'), 'MONTH'] = 'SPRING'
+df_LA.loc[df_LA['MONTH'].str.contains('5'), 'MONTH'] = 'SPRING'
+
+df_LA.loc[df_LA['MONTH'].str.contains('12'), 'MONTH'] = 'WINTER'
+df_LA.loc[df_LA['MONTH'].str.contains('1'), 'MONTH'] = 'WINTER'
+df_LA.loc[df_LA['MONTH'].str.contains('2'), 'MONTH'] = 'WINTER'
+
+
+
+df_CHI.loc[df_CHI['MONTH'].str.contains('9'), 'MONTH'] = 'FALL'
+df_CHI.loc[df_CHI['MONTH'].str.contains('10'), 'MONTH'] = 'FALL'
+df_CHI.loc[df_CHI['MONTH'].str.contains('11'), 'MONTH'] = 'FALL'
+
+df_CHI.loc[df_CHI['MONTH'].str.contains('6'), 'MONTH'] = 'SUMMER'
+df_CHI.loc[df_CHI['MONTH'].str.contains('7'), 'MONTH'] = 'SUMMER'
+df_CHI.loc[df_CHI['MONTH'].str.contains('8'), 'MONTH'] = 'SUMMER'
+
+df_CHI.loc[df_CHI['MONTH'].str.contains('3'), 'MONTH'] = 'SPRING'
+df_CHI.loc[df_CHI['MONTH'].str.contains('4'), 'MONTH'] = 'SPRING'
+df_CHI.loc[df_CHI['MONTH'].str.contains('5'), 'MONTH'] = 'SPRING'
+
+df_CHI.loc[df_CHI['MONTH'].str.contains('12'), 'MONTH'] = 'WINTER'
+df_CHI.loc[df_CHI['MONTH'].str.contains('1'), 'MONTH'] = 'WINTER'
+df_CHI.loc[df_CHI['MONTH'].str.contains('2'), 'MONTH'] = 'WINTER'
+
+
+#Rename the columns from MONTH to SEASON
+df_NY.rename(columns={'MONTH': 'SEASON'}, inplace = True)
+df_LA.rename(columns={'MONTH': 'SEASON'}, inplace = True)
+df_CHI.rename(columns={'MONTH': 'SEASON'}, inplace = True)
+
+
+
+
+#The Pearson’s Chi-Square statistical hypothesis is a test for independence between categorical variables.
+#SPlit the dataframes up into four seasons
+#SPRING_NY = df_NY[(df_NY['MONTH'] >= 3) & (df_NY['MONTH'] <= 5)]
+#SUMMER_NY = df_NY[(df_NY['MONTH'] >= 6) & (df_NY['MONTH'] <= 8)]
+#FALL_NY = df_NY[(df_NY['MONTH'] >= 9) & (df_NY['MONTH'] <= 11)]
+
+#WINTER_NY1 = df_NY[(df_NY['MONTH'] == 1)]
+#WINTER_NY2 = df_NY[(df_NY['MONTH'] == 2)]
+#WINTER_NY12 = df_NY[(df_NY['MONTH'] == 12)]
+#WINTER_NY = pd.concat([WINTER_NY1, WINTER_NY2, WINTER_NY12])
+
+contingency_NY = pd.crosstab(df_NY['CRIME_DESCRIPTION'], df_NY['SEASON'])
+contingency_LA = pd.crosstab(df_LA['CRIME_DESCRIPTION'], df_LA['SEASON'])
+contingency_CHI = pd.crosstab(df_CHI['CRIME_DESCRIPTION'], df_CHI['SEASON'])
+
+
+# Chi-square test of independence.
+c, p_NY, dof, expected = chi2_contingency(contingency_NY)
+c, p_LA, dof, expected = chi2_contingency(contingency_LA)
+c, p_CHI, dof, expected = chi2_contingency(contingency_CHI)
+
+print('p-value NYC: ' + str(p_NY))
+print('p-value LA: ' + str(p_LA))
+print('p-value CHICAGO: ' + str(p_CHI))
+
+
+#The p-values are 5.425229593029252e-213%, 4.925400844188551e-139%, and < 2.2250738585072014e-310% for NYC, 
+#LA, and Chicago respectively, which means that we reject the null hypothesis at the 95% level of confidence 
+#since they are less than 0.05. The null hypothesis was that the seasons and the occurence of each type of 
+#crime are independent. We can then conclude that the two factors are in fact, dependent on each other and 
+#the seasons do have an effect on crime. 
+#contingency_CHI.head(10)
